@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import './App.css';
+import styles from './App.module.css';
 
 const useSemiPersistentState = (key, initialState) => {
   const [value, setValue] = React.useState(
@@ -93,8 +93,8 @@ const App = () => {
   }
 
   return (
-    <div className="container">
-      <h1 className="headline-primary">My Hacker Stories</h1>
+    <div className={styles.container}>
+      <h1 className={styles.headlinePrimary}>My Hacker Stories</h1>
       <SearchForm 
         searchTerm={searchTerm} 
         onSearchSubmit={handleSearchSubmit} 
@@ -118,7 +118,7 @@ const SearchForm = ({
   searchTerm, onSearchSubmit, onSearchInput
 }) => {
   return (
-    <form onSubmit={onSearchSubmit} className="search-form">
+    <form onSubmit={onSearchSubmit} className={styles.SearchForm}>
       <InputWithLabel 
         id="search"
         value={searchTerm}
@@ -131,7 +131,7 @@ const SearchForm = ({
       <button 
         type="submit" 
         disabled={!searchTerm} 
-        className="button button_large"
+        className={`${styles.button} ${styles.buttonLarge}`}
       >
         Submit
       </button>
@@ -154,7 +154,7 @@ const InputWithLabel = ({id, type = 'text', value, onInputChange, isFocused, chi
 
   return (
     <>
-      <label htmlFor="id" className="label">{children}</label>
+      <label htmlFor="id" className={styles.label}>{children}</label>
       &nbsp;
       <input 
         ref={inputRef}
@@ -162,7 +162,7 @@ const InputWithLabel = ({id, type = 'text', value, onInputChange, isFocused, chi
         type={type}
         value={value}
         onChange={onInputChange}
-        className="input"
+        className={styles.input}
       />
     </>
   );
@@ -185,7 +185,7 @@ const List = ({list, onRemoveItem}) => {
 
 const Item = ({item, onRemoveItem}) => {
   return (
-    <div className="item">
+    <div className={styles.item}>
 
       <span style={{ width: '40%'}}>
         <a href={item.url}>{item.title}</a>
@@ -198,7 +198,7 @@ const Item = ({item, onRemoveItem}) => {
         <button 
           type="button" 
           onClick={() => onRemoveItem(item)}
-          className="button button_small"
+          className={`${styles.button} ${styles.buttonSmall}`}
         >
           Dismiss
         </button>
