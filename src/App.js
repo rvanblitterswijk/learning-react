@@ -42,36 +42,57 @@ const getAsyncStories = () => {
 
 const storiesReducer = (state, action) => {
   switch(action.type) {
-    case 'SET_STORIES':
-      return action.payload;
+    case 'STORIES_FETCH_INIT':
+      return {
+        data: [],
+        isLoading: true,
+        isError: false
+      }
+    case 'STORIES_FETCH_SUCCESS':
+      return {
+        data: action.payload,
+        isLoading: false,
+        isError: false
+      }
+    case 'STORIES_FETCH_FAILURE':
+      return {
+        data: [],
+        isLoading: false,
+        isError: true
+      }
     case 'REMOVE_STORY':
-      return state.filter(
-        story => action.payload.objectID !== story.objectID
-      );
+      return {
+        data: state.filter(story => action.payload.objectID !== story.objectID),
+        isLoading: false,
+        isError: false
+      }
     default: 
       throw new Error()
   }
 }
 
 function App() {
-  const [stories, dispatchStories] = React.useReducer(storiesReducer, []);
+  const [stories, dispatchStories] = React.useReducer(
+    storiesReducer, 
+    { data: [], isLoading: false, isError: false }
+  );
+  
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'React');
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
 
   React.useEffect(() => {
-    setIsLoading(true);
+    dispatchStories({type: 'STORIES_FETCH_INIT'});
 
     getAsyncStories()
       .then(result => {
         dispatchStories({
-          type: 'SET_STORIES',
+          type: 'STORIES_FETCH_SUCCESS',
           payload: result.data.stories
         });
-        setIsLoading(false);
       })
       .catch(() => { 
-        setIsError(true); 
+        dispatchStories({
+          type: 'STORIES_FETCH_FAILURE'
+        });
       })
   }, []);
 
@@ -86,7 +107,7 @@ function App() {
     });
   }
 
-  const searchedStories = stories.filter(story => { 
+  const searchedStories = stories.data.filter(story => { 
     return story.title.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
@@ -107,10 +128,10 @@ function App() {
       <hr />
 
       {
-        isError && <p>Something went wrong ...</p>
+        stories.isError && <p>Something went wrong ...</p>
       }
-      { 
-        isLoading ? 
+      {
+        stories.isLoading ? 
         (<p>Loading ...</p>) : 
         (<List list={searchedStories} onRemoveItem={handleRemoveStory} />)
       }
@@ -139,7 +160,6 @@ const InputWithLabel = ({id, type = 'text', value, onInputChange, isFocused, chi
         ref={inputRef}
         id={id}
         type={type}
-        autofocus
         value={value}
         onChange={onInputChange}
       />
