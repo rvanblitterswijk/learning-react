@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 import styles from './App.module.css';
+import { ReactComponent as Check } from './check.svg';
 
 const useSemiPersistentState = (key, initialState) => {
   const [value, setValue] = React.useState(
@@ -39,7 +40,7 @@ const storiesReducer = (state, action) => {
       }
     case 'REMOVE_STORY':
       return {
-        data: state.filter(story => action.payload.objectID !== story.objectID),
+        data: state.data.filter(story => action.payload.objectID !== story.objectID),
         isLoading: false,
         isError: false
       }
@@ -200,7 +201,7 @@ const Item = ({item, onRemoveItem}) => {
           onClick={() => onRemoveItem(item)}
           className={`${styles.button} ${styles.buttonSmall}`}
         >
-          Dismiss
+          <Check height="18px" width="18px" />
         </button>
       </span>
 
