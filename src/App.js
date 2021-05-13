@@ -50,12 +50,11 @@ function App() {
     storiesReducer, 
     { data: [], isLoading: false, isError: false }
   );
-  
   const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'React');
 
-  React.useEffect(() => {
+  const handleFetchStories = React.useCallback(() => {
     if (!searchTerm) return;
-    
+
     dispatchStories({type: 'STORIES_FETCH_INIT'});
 
     fetch(`${API_ENDPOINT}${searchTerm}`)
@@ -72,6 +71,10 @@ function App() {
         });
       })
   }, [searchTerm]);
+
+  React.useEffect(() => {
+    handleFetchStories();
+  }, [handleFetchStories]);
 
   const  handleSearch = (event) => {
     setSearchTerm(event.target.value);
