@@ -170,18 +170,21 @@ const InputWithLabel = ({id, type = 'text', value, onInputChange, isFocused, chi
 }
 
 
-const List = ({list, onRemoveItem}) => {
-  return list.map((item) => {
-    return (
-      <Item 
-        key={item.objectID} 
-        item={item} 
+const List = React.memo(
+  ({list, onRemoveItem}) => {
+    return list.map((item) => {
+      return (
+        <Item 
+          key={item.objectID} 
+          item={item} 
+  
+          onRemoveItem={onRemoveItem}
+        />
+      )
+    })
+  }
+);
 
-        onRemoveItem={onRemoveItem}
-      />
-    )
-  })
-}
 
 
 const Item = ({item, onRemoveItem}) => {
