@@ -4,6 +4,8 @@ import axios from 'axios';
 import styles from './App.module.css';
 import { ReactComponent as Check } from './check.svg';
 
+
+
 type Story = {
   objectID: string;
   url: string;
@@ -243,22 +245,20 @@ const InputWithLabel = ({id, type = 'text', value, onInputChange, isFocused, chi
 }
 
 
-const List = React.memo(
-  ({list, onRemoveItem} : ListProps) => {
-    return <>
-      {list.map((item) => {
-        return (
-          <Item 
-            key={item.objectID} 
-            item={item} 
-    
-            onRemoveItem={onRemoveItem}
-          />
-        )
-      })}
-    </>
-  }
-);
+const List = ({list, onRemoveItem} : ListProps) => {
+  return <>
+    {list.map((item) => {
+      return (
+        <Item 
+          key={item.objectID} 
+          item={item} 
+  
+          onRemoveItem={onRemoveItem}
+        />
+      )
+    })}
+  </>
+}
 
 
 const Item = ({item, onRemoveItem} : ItemProps) => {
@@ -287,3 +287,5 @@ const Item = ({item, onRemoveItem} : ItemProps) => {
 }
 
 export default App;
+
+export { SearchForm, InputWithLabel, List, Item };
