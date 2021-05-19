@@ -3,7 +3,7 @@ A simple React webapp that contains a list of hackerstories retrieved from https
 The list can be filtered (backend filtering using query param) using the input. 
 
 This project was made with the intent of getting familiar with React. 
-It contains React hooks (states, effects and reducers), components, custom hooks (for semi-persistent saving), callback functions, stable data fetching from remote API's using axios and unit/integration/snapshot testing using Jest.
+It contains React hooks (states, effects and reducers), components, custom hooks (for semi-persistent saving), callback functions, modular stylesheets, stable data fetching from remote API's using axios and unit/integration/snapshot testing using Jest.
 
 ## Demo
 ![Demo](./demo.gif)
