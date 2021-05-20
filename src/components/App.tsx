@@ -76,8 +76,9 @@ const App = () => {
         { data: [], isLoading: false, isError: false }
     );
     const [searchTerm, setSearchTerm] = useSemiPersistentState('search', 'React');
-    const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
-
+    const getUrl = (searchTerm : string) => `${API_ENDPOINT}${searchTerm}`;
+    const [urls, setUrls] = useState([getUrl(searchTerm)]);
+    
     const handleSearchInput = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -87,15 +88,19 @@ const App = () => {
     const handleSearchSubmit = (
         event: React.FormEvent<HTMLFormElement>
     ) => {
-        setUrl(`${API_ENDPOINT}${searchTerm}`);
+        if (getUrl(searchTerm) === urls[0]) {
+            setUrls(urls);
+        } else {
+            setUrls(([getUrl(searchTerm)].concat(urls)).slice(0,4));
+        }
+
         event.preventDefault();
     }
 
     const handleFetchStories = React.useCallback(async () => {
         dispatchStories({ type: 'STORIES_FETCH_INIT' });
-        
         try {
-            const result = await axios.get(url);
+            const result = await axios.get(urls[0]);
             dispatchStories({
                 type: 'STORIES_FETCH_SUCCESS',
                 payload: result.data.hits,
@@ -103,7 +108,7 @@ const App = () => {
         } catch {
             dispatchStories({ type: 'STORIES_FETCH_FAILURE' });
         }
-    }, [url]);
+    }, [urls]);
 
     React.useEffect(() => {
         handleFetchStories();
@@ -116,6 +121,17 @@ const App = () => {
         });
     }
 
+    const submitNewInputValue = (input : string) => {
+        setSearchTerm(input);
+        if (getUrl(searchTerm) === urls[0]) {
+            setUrls(urls);
+        } else {
+            setUrls(([getUrl(searchTerm)].concat(urls)).slice(0,4));
+        }
+    }
+
+    const extractSearchTerm = (url: string) => url.replace(API_ENDPOINT, '');
+
     return (
         <div className={styles.container}>
             <h1 className={styles.headlinePrimary}>My Hacker Stories</h1>
@@ -123,6 +139,8 @@ const App = () => {
                 searchTerm={searchTerm}
                 onSearchSubmit={handleSearchSubmit}
                 onSearchInput={handleSearchInput}
+                onClick={submitNewInputValue}
+                recentSearches={urls.slice(1,4).map(url => extractSearchTerm(url))}
             />
 
             {

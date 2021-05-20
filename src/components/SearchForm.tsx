@@ -1,15 +1,18 @@
 import React from 'react';
 import styles from '../styles/App.module.css';
 import InputWithLabel from './InputWithLabel';
+import RecentSearches from './RecentSearches';
 
 type SearchFormProps = {
     searchTerm: string;
     onSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+    recentSearches: string[];
+    onClick: (search: string) => void
 };
 
 const SearchForm = ({
-    searchTerm, onSearchSubmit, onSearchInput
+    searchTerm, onSearchSubmit, onSearchInput, recentSearches, onClick
 }: SearchFormProps) => {
     return (
         <form onSubmit={onSearchSubmit} className={styles.SearchForm}>
@@ -28,7 +31,9 @@ const SearchForm = ({
                 className={`${styles.button} ${styles.buttonLarge}`}
             >
                 Submit
-      </button>
+            </button>
+
+            <RecentSearches searches={recentSearches} onClick={onClick} />
         </form>
     );
 }

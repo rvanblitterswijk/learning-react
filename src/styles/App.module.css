@@ -81,6 +81,10 @@
   padding: 10px;
 }
 
+.buttonRow {
+    margin: 2px;
+}
+
 .searchForm {
   padding: 10px 0 20px 0;
   display: flex;
