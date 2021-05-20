@@ -16,11 +16,12 @@ type ItemProps = {
 const List = ({ list, onRemoveItem }: ListProps) => {
     const [sortBy, setSortBy] = useSemiPersistentState('sortBy', 'title');
     const [sortReversed, setSortReversed] = useSemiPersistentState('sortReversed', 'false');
-
+    var items;
+    
     if (sortReversed === 'true') {
-        var items = _.reverse(_.sortBy(list, [sortBy]));
+        items = _.reverse(_.sortBy(list, [sortBy]));
     } else {
-        var items = _.sortBy(list, [sortBy]);
+        items = _.sortBy(list, [sortBy]);
     }
 
     const handleSort = (sortColumn : string) => {
