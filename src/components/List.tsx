@@ -1,6 +1,6 @@
 import styles from '../styles/App.module.css';
 import { ReactComponent as Check } from '../styles/check.svg';
-import { useSemiPersistentState } from '../shared/helpers'
+import { useSemiPersistentState } from '../shared/helpers';
 
 var _ = require('lodash');
 
@@ -15,19 +15,41 @@ type ItemProps = {
 
 const List = ({ list, onRemoveItem }: ListProps) => {
     const [sortBy, setSortBy] = useSemiPersistentState('sortBy', 'title');
+    const [sortReversed, setSortReversed] = useSemiPersistentState('sortReversed', 'false');
+
+    if (sortReversed === 'true') {
+        var items = _.reverse(_.sortBy(list, [sortBy]));
+    } else {
+        var items = _.sortBy(list, [sortBy]);
+    }
+
+    const handleSort = (sortColumn : string) => {
+        if (sortColumn === sortBy) {
+            toggleSortReversed();
+        }
+        setSortBy(sortColumn);
+    }
+
+    const toggleSortReversed = () => {
+        if (sortReversed === 'true') {
+            setSortReversed('false');
+        } else {
+            setSortReversed('true');
+        }
+    }
 
     return <>
         <div className={styles.columnHeaders}>
-            <button onClick={() => setSortBy('title')} style={{ width: '40%' }} className={styles.columnHeader}>
+            <button onClick={() => handleSort('title')} style={{ width: '40%' }} className={styles.columnHeader}>
                 Title
             </button>
-            <button onClick={() => setSortBy('author')} style={{ width: '30%' }} className={styles.columnHeader}>
+            <button onClick={() => handleSort('author')} style={{ width: '30%' }} className={styles.columnHeader}>
                 Author
             </button>
-            <button onClick={() => setSortBy('num_comments')} style={{ width: '10%' }} className={styles.columnHeader}>
+            <button onClick={() => handleSort('num_comments')} style={{ width: '10%' }} className={styles.columnHeader}>
                 Amount of comments
             </button>
-            <button onClick={() => setSortBy('points')} style={{ width: '10%' }} className={styles.columnHeader}>
+            <button onClick={() => handleSort('points')} style={{ width: '10%' }} className={styles.columnHeader}>
                 Points
             </button>
             <button style={{ width: '10%' }} className={styles.columnHeader}>
@@ -35,7 +57,7 @@ const List = ({ list, onRemoveItem }: ListProps) => {
             </button>
         </div>
 
-        {_.sortBy(list, [sortBy]).map((item: Story) => {
+        {items.map((item: Story) => {
             return (
                 <Item
                     key={item.objectID}
@@ -45,7 +67,6 @@ const List = ({ list, onRemoveItem }: ListProps) => {
                 />
             )
         })}
-        
     </>
 }
 
