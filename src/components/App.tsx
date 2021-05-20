@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { List } from './List';
 import SearchForm from './SearchForm'
-
 import styles from '../styles/App.module.css';
+import {useSemiPersistentState} from '../shared/helpers'
 
 type StoriesState = {
     data: Stories;
@@ -33,22 +33,6 @@ type StoriesAction =
     | StoriesFetchSuccessAction
     | StoriesFetchFailureAction
     | StoriesRemoveAction;
-
-
-const useSemiPersistentState = (
-    key: string,
-    initialState: string
-): [string, (newValue: string) => void] => {
-    const [value, setValue] = React.useState(
-        localStorage.getItem(key) || initialState
-    );
-
-    React.useEffect(() => {
-        localStorage.setItem(key, value);
-    }, [value, key]);
-
-    return [value, setValue];
-};
 
 const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
@@ -109,7 +93,7 @@ const App = () => {
 
     const handleFetchStories = React.useCallback(async () => {
         dispatchStories({ type: 'STORIES_FETCH_INIT' });
-
+        
         try {
             const result = await axios.get(url);
             dispatchStories({
@@ -119,8 +103,6 @@ const App = () => {
         } catch {
             dispatchStories({ type: 'STORIES_FETCH_FAILURE' });
         }
-
-
     }, [url]);
 
     React.useEffect(() => {

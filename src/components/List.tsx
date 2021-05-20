@@ -1,15 +1,8 @@
 import styles from '../styles/App.module.css';
 import { ReactComponent as Check } from '../styles/check.svg';
+import { useSemiPersistentState } from '../shared/helpers'
 
-type Story = {
-    objectID: string;
-    url: string;
-    title: string;
-    author: string;
-    num_comments: number;
-    points: number;
-};
-type Stories = Array<Story>;
+var _ = require('lodash');
 
 type ListProps = {
     list: Stories;
@@ -20,10 +13,29 @@ type ItemProps = {
     onRemoveItem: (item: Story) => void;
 };
 
-
 const List = ({ list, onRemoveItem }: ListProps) => {
+    const [sortBy, setSortBy] = useSemiPersistentState('sortBy', 'title');
+
     return <>
-        {list.map((item: Story) => {
+        <div className={styles.columnHeaders}>
+            <button onClick={() => setSortBy('title')} style={{ width: '40%' }} className={styles.columnHeader}>
+                Title
+            </button>
+            <button onClick={() => setSortBy('author')} style={{ width: '30%' }} className={styles.columnHeader}>
+                Author
+            </button>
+            <button onClick={() => setSortBy('num_comments')} style={{ width: '10%' }} className={styles.columnHeader}>
+                Amount of comments
+            </button>
+            <button onClick={() => setSortBy('points')} style={{ width: '10%' }} className={styles.columnHeader}>
+                Points
+            </button>
+            <button style={{ width: '10%' }} className={styles.columnHeader}>
+                Remove item
+            </button>
+        </div>
+
+        {_.sortBy(list, [sortBy]).map((item: Story) => {
             return (
                 <Item
                     key={item.objectID}
@@ -33,6 +45,7 @@ const List = ({ list, onRemoveItem }: ListProps) => {
                 />
             )
         })}
+        
     </>
 }
 

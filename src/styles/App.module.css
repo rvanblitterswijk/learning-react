@@ -32,6 +32,28 @@
   color: inherit;
 }
 
+.columnHeaders {
+    display: flex;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 5px;
+}
+
+.columnHeaders > button {
+    display: inline;
+    padding: 0 0px;
+    margin: 0 5px;
+    border: none;
+    background: none;
+    font-size: medium;
+    text-align: left;
+    font-weight: bold;
+}
+
+.columnHeader:hover {
+    cursor: pointer;
+}
+
 .button {
   background: transparent;
   border: 1px solid #171212;

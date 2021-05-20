@@ -39,8 +39,7 @@ describe('App', () => {
         await renderer.act(async () => {
             component = renderer.create(<App />);
         });
-
-
+        
         expect(component.root.findByType(List).props.list).toEqual(list);
     });
     it('fails fetching data with a list', async () => {
